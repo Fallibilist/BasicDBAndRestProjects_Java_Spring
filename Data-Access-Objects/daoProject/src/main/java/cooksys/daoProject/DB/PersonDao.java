@@ -17,9 +17,10 @@ public class PersonDao {
 	private Connection connection;
 	private Statement statement;
 	private LocationDao locationDao;
+	private InterestDao interestDao;
 	private PersonInterestPairDao personInterestPairDao;
 	
-	public PersonDao(Connection connection, LocationDao locationDao, PersonInterestPairDao personInterestPairDao) {
+	public PersonDao(Connection connection, LocationDao locationDao, InterestDao interestDao, PersonInterestPairDao personInterestPairDao) {
 		this.connection = connection;
 		try {
 			this.statement = connection.createStatement();
@@ -27,6 +28,7 @@ public class PersonDao {
 			e.printStackTrace();
 		}
 		this.locationDao = locationDao;
+		this.interestDao = interestDao;
 		this.personInterestPairDao = personInterestPairDao;
 	}
 
@@ -76,6 +78,27 @@ public class PersonDao {
 	public boolean save(Person person) {
 		// stores based on whether an id exists
 		try {
+			if(person.getLocation().getId() == null) {
+				locationDao.save(person.getLocation());
+			} else {
+				if(locationDao.get(person.getLocation().getId()) == null) {
+					person.getLocation().setId(null);
+					locationDao.save(person.getLocation());
+					return false;
+				}
+			}
+			
+			person.getInterests().forEach(interest -> {
+				if(interest.getId() == null) {
+					interestDao.save(interest);
+				} else {
+					if(interestDao.get(interest.getId()) == null) {
+						interest.setId(null);
+						interestDao.save(interest);
+					}
+				}
+			});
+			
 			if(person.getId() == null) {
 				// Insert
 				String query = "INSERT INTO \"Person\" (first_name, last_name, age, location_id) VALUES (\'" + 

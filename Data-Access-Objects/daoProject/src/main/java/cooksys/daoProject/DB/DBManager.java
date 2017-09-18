@@ -53,7 +53,7 @@ public class DBManager {
 		locationDao = new LocationDao(connection);
 		interestDao = new InterestDao(connection);
 		personInterestPairDao = new PersonInterestPairDao(connection);
-		personDao = new PersonDao(connection, locationDao, personInterestPairDao);
+		personDao = new PersonDao(connection, locationDao, interestDao, personInterestPairDao);
 	}
 	
 	public synchronized void closeConnection() {

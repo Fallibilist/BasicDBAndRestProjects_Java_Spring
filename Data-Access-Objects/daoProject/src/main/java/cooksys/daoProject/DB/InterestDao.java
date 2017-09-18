@@ -25,8 +25,9 @@ public class InterestDao {
 			String query = "SELECT * FROM \"Interest\" WHERE \"Interest\".interest_id=" + id;
 			ResultSet resultSet = statement.executeQuery(query);
 		
-			resultSet.next();
-			return new Interest(resultSet.getLong(1), resultSet.getString(2));
+			if(resultSet.next()) {
+				return new Interest(resultSet.getLong(1), resultSet.getString(2));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

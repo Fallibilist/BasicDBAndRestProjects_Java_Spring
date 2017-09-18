@@ -24,8 +24,9 @@ public class LocationDao {
 			String query = "SELECT * FROM \"Location\" WHERE \"Location\".location_id=" + id;
 			ResultSet resultSet = statement.executeQuery(query);
 		
-			resultSet.next();
-			return new Location(resultSet.getLong(1), resultSet.getString(2), resultSet.getString(3), resultSet.getString(4));
+			if(resultSet.next()) {
+				return new Location(resultSet.getLong(1), resultSet.getString(2), resultSet.getString(3), resultSet.getString(4));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
